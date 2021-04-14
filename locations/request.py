@@ -1,43 +1,77 @@
+import sqlite3
+import json
+from models import Location
+
 LOCATIONS = [
     {
       "id": 1,
       "name": "Nashville North",
-      "address": "8422 Johnson Pike",
-      "volunteers": 5
+      "address": "8422 Johnson Pike"
     },
     {
       "id": 2,
       "name": "Nashville South",
-      "address": "209 Emory Drive",
-      "volunteers": 3
+      "address": "209 Emory Drive"
     },
     {
       "id": 3,
       "name": "Nashville East",
-      "address": "200 Gallatin Ave",
-      "volunteers": 6
+      "address": "200 Gallatin Ave"
     },
     {
       "id": 4,
       "name": "Nashville West",
-      "address": "100 West Way",
-      "volunteers": 4
+      "address": "100 West Way"
     }
   ]
 
 def get_all_locations():
-    return LOCATIONS
+   
+    with sqlite3.connect("./kennel.db") as conn:
+
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address
+        FROM location a
+        """)
+
+        locations = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            location = Location(row['id'], row['name'], row['address'])
+
+            locations.append(location.__dict__)
+
+    return json.dumps(locations)
 
 
 def get_single_location(id):
-    requested_location = None
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    for location in LOCATIONS:
-    
-        if location["id"] == id:
-            requested_location = location
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address
+        FROM location a
+        WHERE a.id = ?
+        """, ( id, ))
 
-    return requested_location
+        data = db_cursor.fetchone()
+
+        location = Location(data['id'], data['name'], data['address'])
+
+        return json.dumps(location.__dict__)
 
 def create_location(location):
     max_id = LOCATIONS[-1]["id"]
