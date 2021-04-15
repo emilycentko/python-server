@@ -1,7 +1,7 @@
 import json
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from animals import get_all_animals, get_single_animal, create_animal, delete_animal, update_animal
+from animals import get_all_animals, get_single_animal, create_animal, delete_animal, update_animal, get_animals_by_location
 from locations import get_all_locations, get_single_location, create_location, delete_location, update_location
 from employees import get_all_employees, get_single_employee, create_employee, delete_employee, update_employee
 from customers import get_all_customers, get_single_customer, create_customer, delete_customer, get_customers_by_email
@@ -66,6 +66,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             # email as a filtering value?
             if key == "email" and resource == "customers":
                 response = get_customers_by_email(value)
+
+            if key == "location_id" and resource == "animals":
+                response = get_animals_by_location(value)
 
         self.wfile.write(response.encode())
 
