@@ -34,10 +34,10 @@ def get_all_locations():
 
         db_cursor.execute("""
         SELECT
-            a.id,
-            a.name,
-            a.address
-        FROM location a
+            l.id,
+            l.name,
+            l.address
+        FROM location l
         """)
 
         locations = []
@@ -60,11 +60,11 @@ def get_single_location(id):
 
         db_cursor.execute("""
         SELECT
-            a.id,
-            a.name,
-            a.address
-        FROM location a
-        WHERE a.id = ?
+            l.id,
+            l.name,
+            l.address
+        FROM location l
+        WHERE l.id = ?
         """, ( id, ))
 
         data = db_cursor.fetchone()
