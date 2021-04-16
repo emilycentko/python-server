@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Employee
+from models import Employee, Location
 
 EMPLOYEES = [
     {
@@ -36,8 +36,12 @@ def get_all_employees():
         SELECT
             e.id,
             e.name,
-            e.location_id
-        FROM employee e
+            e.location_id,
+	        l.name location_name,
+	        l.address location_address
+        FROM Employee e
+        JOIN Location l 
+	        ON l.id = e.location_id
         """)
 
         employees = []
@@ -47,6 +51,10 @@ def get_all_employees():
         for row in dataset:
 
             employee = Employee(row['id'], row['name'], row['location_id'])
+
+            location = Location(row['id'], row['location_name'], row['location_address'])
+
+            employee.location = location.__dict__
 
             employees.append(employee.__dict__)
 
