@@ -49,16 +49,21 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_single_animal(id)}"
                 else:
                     response = f"{get_all_animals()}"
-            elif resource == "customers":
+            if resource == "customers":
                 if id is not None:
                     response = f"{get_single_customer(id)}"
                 else:
                     response = f"{get_all_customers()}"
-            elif resource == "employees":
+            if resource == "employees":
                 if id is not None:
                     response = f"{get_single_employee(id)}"
                 else:
                     response = f"{get_all_employees()}"
+            if resource == "locations":
+                if id is not None:
+                    response = f"{get_single_location(id)}"
+                else:
+                    response = f"{get_all_locations()}"
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
